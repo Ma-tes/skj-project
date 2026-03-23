@@ -1,8 +1,6 @@
 import os
-import shutil
 
 from sqlalchemy.orm import Session
-
 from models import File
 
 STORAGE_DIR = "storage"
