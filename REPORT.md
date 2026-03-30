@@ -1,3 +1,22 @@
+## 23.03
+
+1. Jaké nástroje AI byly použity
+   - Claude Opus 4.6(100%)
+2. Příklady promptů
+    - „Create implementation of endpoints. With small model repository. Make it as clean as possible, without any other dependencies."
+    - „Use something different and also separate the endpoints to different file endpoints.py"
+    - „Add user id support for all endpoints."
+    - „Generate metadata logging into json - for individual endpoints."
+    - „Generate requirements for this project."
+3. Co AI vygenerovala správně
+    - Kompletní strukturu projektu (main.py, endpoints.py, repository.py, models.py, database.py)
+    - Ne příliš perfektní, ale repository pattern a ukládáním souborů na disk
+    - REST API endpointy (upload, download, delete, list) s FastAPI a APIRouter
+    - Oddělení souborů podle uživatelů (storage/<user_id>/<file_id>)
+    - Použití UUID jako názvu souboru na disku – bez kolizí názvů
+4. Co bylo nutné opravit
+    - Strukturu endpointů do separátních souborů
+
 ## 30.03
 
 1. Jaké nástroje AI byly použity
