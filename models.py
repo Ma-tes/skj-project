@@ -1,10 +1,27 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import DateTime, Integer, String, Boolean, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database import Base
+
+
+class Bucket(Base):
+    __tablename__ = "buckets"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    current_storage_bytes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    ingress_bytes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    egress_bytes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    internal_transfer_bytes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    count_write_requests: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    count_read_requests: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+
+    files: Mapped[list["File"]] = relationship(back_populates="bucket")
+
 
 class File(Base):
     __tablename__ = "files"
@@ -15,14 +32,8 @@ class File(Base):
     path: Mapped[str] = mapped_column(String)
     size: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    bucket_id: Mapped[int] = mapped_column(ForeignKey("buckets.id"))
+    is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
 
-class Task(Base):
-    __tablename__ = "tasks"
+    bucket: Mapped["Bucket"] = relationship(back_populates="files")
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(50))
-    description: Mapped[str] = mapped_column(String, nullable=True)
-    completed: Mapped[bool] = mapped_column(Boolean, default=False)
-
-    def __repr__(self) -> str:
-        return f"Task(id={self.id}, title={self.title}, description={self.description}, completed={self.completed})"
